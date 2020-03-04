@@ -1,9 +1,12 @@
 module AMR
 
-using Parameters
-using StaticArrays
+include("sampling.jl")
+export sample_function
 
-include("AbstractTrees.jl/src/AbstractTrees.jl")
-include("tree.jl")
+include("utils.jl")
 
-end
+# using Parameters
+# using StaticArrays
+# include("AbstractTrees.jl/src/AbstractTrees.jl")
+# include("tree.jl")
+end # module

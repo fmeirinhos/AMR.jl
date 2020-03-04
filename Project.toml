@@ -1,0 +1,4 @@
+name = "AMR"
+uuid = "ad67239e-a8e9-4b28-88d8-32150d386a38"
+authors = ["Francisco Meirinhos <fcmeirinhos@gmail.com>"]
+version = "0.1.0"
