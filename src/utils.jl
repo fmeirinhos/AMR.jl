@@ -3,6 +3,7 @@ function ptp(x::AbstractArray{<:AbstractFloat, 1})
 end
 
 function ptp(x::AbstractArray{<:Complex{<:AbstractFloat}, 1})
+  x_ = reinterpret(Float64, x)
   @views re′ = x_[1:2:end]
   @views im′ = x_[2:2:end]
   

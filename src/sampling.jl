@@ -32,7 +32,14 @@ function sample_function(func, nodes, values=func.(nodes), mask=Colon();
     # compute the angle between consecutive line segments
     dx ./= ds
     dy ./= ds
-    dcos = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy[2:end] .* dy[1:end-1], -1, 1))
+
+    if eltype(dy) <: Complex
+      dy_re = reinterpret(Float64, dy)[1:2:end]
+      dy_im = reinterpret(Float64, dy)[2:2:end]
+      dcos = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy_re[2:end] .* dy_re[1:end-1] + dy_im[2:end] .* dy_im[1:end-1], -1, 1))
+    else
+      dcos = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy[2:end] .* dy[1:end-1], -1, 1))
+    end
 
     # determine where to subdivide
     # ≈ total length of the path (in the scaled data) is computed to accuracy `tol`
