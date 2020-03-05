@@ -24,27 +24,25 @@ function sample_function(func, nodes, values=func.(nodes), mask=Colon();
   if length(x₂) < min_nodes
     mask = trues(length(x₂) - 1)
   else
-    # rescale and compute the length of each line segment in the path
+    # Rescale and compute the length of each line segment in the path
     dx = diff(x₂) / ptp(x₂)
     dy = diff(y₂) / abs(ptp(y₂))
     ds = sqrt.(abs2.(dx) + abs2.(dy))
     
-    # compute the angle between consecutive line segments
+    # Compute the angle between consecutive line segments θ = acos(a⋅b / (|a||b|))
     dx ./= ds
     dy ./= ds
 
     if eltype(dy) <: Complex
-      dy_re = reinterpret(Float64, dy)[1:2:end]
-      dy_im = reinterpret(Float64, dy)[2:2:end]
-      dcos = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy_re[2:end] .* dy_re[1:end-1] + dy_im[2:end] .* dy_im[1:end-1], -1, 1))
+      @views dy_re = reinterpret(Float64, dy)[1:2:end]
+      @views dy_im = reinterpret(Float64, dy)[2:2:end]
+      dθ = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy_re[2:end] .* dy_re[1:end-1] + dy_im[2:end] .* dy_im[1:end-1], -1, 1))
     else
-      dcos = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy[2:end] .* dy[1:end-1], -1, 1))
+      dθ = acos.(clamp.(dx[2:end] .* dx[1:end-1] + dy[2:end] .* dy[1:end-1], -1, 1))
     end
 
-    # determine where to subdivide
-    # ≈ total length of the path (in the scaled data) is computed to accuracy `tol`
-    dp_piece = 0.5 * dcos .* (ds[2:end] .+ ds[1:end-1])
-    mask = dp_piece .> tol * sum(ds)
+    # Determine where to subdivide (total length of the path is computed ≈ to accuracy `tol`)
+    mask = 0.5 * dθ .* (ds[2:end] .+ ds[1:end-1]) .> tol * sum(ds)
     mask = [mask; false]
     mask[2:end] .|= mask[1:end-1]
   end
