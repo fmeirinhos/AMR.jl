@@ -1,3 +1,0 @@
-[submodule "src/AbstractTrees.jl"]
-	path = src/AbstractTrees.jl
-	url = https://github.com/Keno/AbstractTrees.jl.git
