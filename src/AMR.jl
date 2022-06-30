@@ -2,7 +2,8 @@ module AMR
 
 export sample_function
 
-include("utils.jl")
+ptp(x) = argmax(abs, x) - argmin(abs, x)
+
 include("sampling.jl")
 
 end # module
